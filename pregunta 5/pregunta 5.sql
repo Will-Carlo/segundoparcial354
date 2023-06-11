@@ -55,7 +55,5 @@ end
 set @sql='select '+LEFT(@sql, LEN(@sql)-1)
 set @sql=@sql+' from nombre'
 print (@sql)
-
 select * from nombre
-
 drop table nombre

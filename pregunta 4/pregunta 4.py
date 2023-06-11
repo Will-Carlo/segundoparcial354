@@ -20,10 +20,8 @@ dist = [
     [8, 4, 15, 0, 17],
     [20, 11, 5, 17, 0]
 ]
-
 def estadisticaGuardada(individuo):
     return individuo.fitness.values
-
 def apt(individuo):
     f = 0
     for i in range(n-1):
