@@ -3,10 +3,10 @@ DECLARE @cadena2 VARCHAR(50) = 'marta'
 DECLARE @m INT = LEN(@cadena1)
 DECLARE @n INT = LEN(@cadena2)
 
--- Crear una tabla temporal para almacenar los c√°lculos de distancia
+-- Crear una tabla temporal para almacenar los c·lculos de distancia
 CREATE TABLE #dp (i INT, j INT, distancia INT)
 
--- Calcular la distancia de edici√≥n
+-- Calcular la distancia de ediciÛn
 DECLARE @i INT = 1, @j INT = 1
 WHILE @i <= @m
 BEGIN
@@ -36,13 +36,14 @@ BEGIN
         ELSE
         BEGIN
             INSERT INTO #dp (i, j, distancia)
-            SELECT @i, @j, 1 + 
-                (
-                    SELECT MIN(distancia)
-                    FROM #dp
-                    WHERE i IN (@i - 1, @i)
-                    AND j IN (@j - 1, @j - 1)
-                )
+            VALUES (@i, @j, 1 + (
+                SELECT MIN(subquery.distancia)
+                FROM (
+                    SELECT (SELECT distancia FROM #dp WHERE i = @i - 1 AND j = @j) AS distancia,
+                           (SELECT distancia FROM #dp WHERE i = @i AND j = @j - 1) AS insercion,
+                           (SELECT distancia FROM #dp WHERE i = @i - 1 AND j = @j - 1) AS sustitucion
+                ) AS subquery
+            ))
         END
 
         SET @j = @j + 1
@@ -51,7 +52,7 @@ BEGIN
     SET @i = @i + 1
 END
 
--- Obtener la distancia m√≠nima de la √∫ltima celda de la tabla temporal
+-- Obtener la distancia mÌnima de la ˙ltima celda de la tabla temporal
 DECLARE @distancia INT = (SELECT distancia FROM #dp WHERE i = @m AND j = @n)
 
 -- Mostrar los resultados
